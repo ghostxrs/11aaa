@@ -1,9 +1,24 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 {% block content %}
-<h2>Postni tahrirlash</h2>
-<form method="post">
-  {%csrf_token%}
-  {{form.as_p}}
-  <input type="submit" value="Update">
-</form>
-{%endblock%}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card shadow-lg p-4" style="max-width: 600px; width: 100%; background-color: #f9f9f9;">
+        <h2 class="text-center mb-4 text-primary">Postni tahrirlash</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <input type="submit" value="Update" class="btn btn-primary w-100">
+        </form>
+    </div>
+</div>
+{% endblock %}
