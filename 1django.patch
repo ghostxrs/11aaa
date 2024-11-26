@@ -1,0 +1,481 @@
+Index: templates/registration/logged_out.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/registration/logged_out.html b/templates/registration/logged_out.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/registration/logged_out.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,4 @@
++{% extends 'base.html' %}
++{% block content%}
++<h2>Tizimdan chiqildi</h2>
++{% endblock %}
+\ No newline at end of file
+Index: templates/registration/login.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/registration/login.html b/templates/registration/login.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/registration/login.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,9 @@
++{% extends 'base.html' %}
++{% block content %}
++<h2> Loginlash jarayoni</h2>
++<form method="post">
++    {%csrf_token%}
++    {{form.as_p}}
++    <button type="submit">LogIn</button>
++</form>
++{% endblock %}
+\ No newline at end of file
+Index: templates/registration/signup.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/registration/signup.html b/templates/registration/signup.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/registration/signup.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,9 @@
++{% extends 'base.html' %}
++{% block content %}
++<h2>Saytdan ro'yhatdan o'tish</h2>
++<form method="post">
++    {% csrf_token %}
++    {{form.as_p}}
++    <button type="submit">SignUp</button>
++</form>
++{% endblock %}
+\ No newline at end of file
+Index: templates/all-news.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/all-news.html b/templates/all-news.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/all-news.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,25 @@
++{% extends 'base.html' %}
++{% block content%}
++<main class="container mt-3 mb-5">
++    {% for news in all_news %}
++    <div class="card mb-4 shadow">
++        <div class="row no-gutters">
++            <div class="col-md-3">
++                <img src="/media/{{news.image}}" class="card-img" alt="{{news.title}}">
++            </div>
++            <div class="col-md-8">
++                <div class="card-body">
++                    <h5 class="card-title">{{news.title}}</h5>
++                    <p class="card-text">{{news.detail}}</p>
++                    <p class="card-text">
++                        <a href="/detail/{{news.id}}" class="btn btn-sm btn-primary">Read Full</a>
++                        <a href="{% url 'edit_post' news.pk %}" class="btn btn-sm btn-primary"> +Taxrirlash </a>
++                        <a href="{% url 'delete_post' news.pk %}" class="btn btn-sm btn-primary"> DELETE </a>
++                    </p>
++                </div>
++            </div>
++        </div>
++    </div>
++    {% endfor %}
++</main>
++{% endblock%}
+\ No newline at end of file
+Index: templates/base.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/base.html b/templates/base.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/base.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,68 @@
++{% load static %}
++<html>
++<head>
++    <title>{% block title %}homepage{% endblock %}</title>
++    <!-- Bootstrap 4 CSS -->
++    <link rel="stylesheet" type="text/css" href="{% static '/css/bootstrap.min.css' %}"/>
++    <!-- Main Jquery -->
++    <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
++    <!-- Bootstrap Js -->
++    <script type="text/javascript" src="{% static '/js/bootstrap.min.js' %}"></script>
++</head>
++<body>
++    <!-- Top News -->
++    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
++        <div class="container">
++            <a class="navbar-brand" href="/">Yangiliklar web sayti</a>
++            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
++                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
++                <span class="navbar-toggler-icon"></span>
++            </button>
++            <div class="collapse navbar-collapse" id="navbarNav">
++                <ul class="navbar-nav ml-auto">
++                    <li class="nav-item {% if request.path == '/' %}active{% endif %}">
++                        <a class="nav-link" href="{% url 'home' %}">Home</a>
++                    </li>
++                    <li class="nav-item {% if request.path == '/all-news' %}active{% endif %}">
++                        <a class="nav-link" href="{% url 'all_news' %}">Yangiliklar</a>
++                    </li>
++                    <li class="nav-item {% if request.path == '/all-categories' %}active{% endif %}">
++                        <a class="nav-link" href="{% url 'all-category' %}">All Categories</a>
++                    </li>
++                    <li class="nav-item {% if request.path == '/all-regions' %}active{% endif %}">
++                        <a class="nav-link" href="{% url 'all-region' %}">All regions</a>
++                    </li>
++                    <li class="nav-item {% if request.path == '/create-post/new' %}active{% endif %}">
++                        <a class="nav-link" href="{% url 'create_post' %}">Create post</a>
++                    </li>
++                    <li class="nav-item">
++                        {% if user.is_authenticated %}
++                            <a class="nav-link" href="">Xush kelibsiz {{user.username}}</a>
++                            <li><a class="nav-link" href="{% url 'logout'%}">LogOut</a></li>
++                        {% else %}
++                            <li><a class="nav-link" href="{% url 'login'%}">Login</a></li>
++                            <li><a class="nav-link" href=""> | </a></li>
++                            <li><a class="nav-link" href="{% url 'signup'%}">SignUp</a></li>
++                        {% endif %}
++                    </li>
++                </ul>
++            </div>
++        </div>
++    </nav>
++
++    {% block content %}
++    {% endblock %}
++
++    <hr/>
++    <footer class="text-muted">
++        <div class="container">
++            <p class="float-right">
++                <a href="{% url 'home' %}">Back to top</a>
++            </p>
++            <p>Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
++            <p>New to Bootstrap? <a href="https://getbootstrap.com/">Visit the homepage</a> or read our <a
++                    href="/docs/4.5/getting-started/introduction/">getting started guide</a>.</p>
++        </div>
++    </footer>
++</body>
++</html>
+Index: templates/category.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/category.html b/templates/category.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/category.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,23 @@
++{% extends 'base.html' %}
++{% block content%}
++<main class="container mt-3 mb-5">
++    <h3 class="border-bottom pb-1 my-4">All Categories</h3>
++    <div class="row">
++        <!-- Category Box -->
++        {% for cat in cats %}
++        <div class="col-md-4">
++            <div class="card mb-3 shadow">
++                <img src="/media/{{cat.image}}" class="card-img-top" alt="{{cat.title}}">
++                <div class="card-body">
++                    <h5 class="card-title">{{ cat.name}}</h5>
++                    <hr/>
++                    <p class="card-text">
++                        <a href="category/{{cat.id}}" class="btn btn-sm btn-primary">All News</a>
++                    </p>
++                </div>
++            </div>
++        </div>
++        {% endfor%}
++    </div>
++</main>
++{% endblock%}
+\ No newline at end of file
+Index: templates/category-news.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/category-news.html b/templates/category-news.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/category-news.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,27 @@
++{% extends 'base.html' %}
++{% block content%}
++<main class="container mt-3 mb-5">
++    <h3 class="border-bottom pb-1 my-4">{{category.title}}</h3>
++    <!-- News Box -->
++    {% for news in all_news %}
++    <div class="card mb-4 shadow">
++        <div class="row no-gutters">
++            <div class="col-md-3">
++                <img src="/media/{{news.image}}" class="card-img" alt="{{news.title}}">
++            </div>
++            <div class="col-md-8">
++                <div class="card-body">
++                    <h5 class="card-title">{{news.title}}</h5>
++                    <p class="card-text">{{news.detail}}</p>
++                    <p class="card-text">
++                        <a href="/detail/{{news.id}}" class="btn btn-sm btn-primary">Read Full</a>
++                        <a href="{% url 'edit_post' news.pk %}" class="btn btn-sm btn-primary"> +Taxrirlash </a>
++                        <a href="{% url 'delete_post' news.pk %}" class="btn btn-sm btn-primary"> DELETE </a>
++                    </p>
++                </div>
++            </div>
++        </div>
++    </div>
++    {% endfor %}
++</main>
++{% endblock%}
+\ No newline at end of file
+Index: templates/create-post.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/create-post.html b/templates/create-post.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/create-post.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,10 @@
++{% extends 'base.html' %}
++{% block content%}
++<h2> Yangi post yaratish </h2>
++<form method="post" enctype="multipart/form-data">
++    {% csrf_token %}
++    {{form.as_p}}
++    <input type="submit" value="ADD">
++
++</form>
++{% endblock%}
+\ No newline at end of file
+Index: templates/delete-post.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/delete-post.html b/templates/delete-post.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/delete-post.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,8 @@
++{% extends 'base.html'%}
++{% block content %}
++<h2>Postni ochirish</h2>
++<form method="post" enctype="multipart/form-data">
++  {%csrf_token%}
++  <input type="submit" value="DEL">
++</form>
++{%endblock%}
+\ No newline at end of file
+Index: templates/detail.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/detail.html b/templates/detail.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/detail.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,37 @@
++{% extends 'base.html' %}
++{% block content%}
++<main class="container mt-3 mb-5">
++	<!-- featured news -->
++	<div class="row my-3">
++		<!-- Left -->
++		<div class="col-md-8">
++			<div class="card mb-3">
++                 <img src="/media/{{news.image}}" class="card-img-top" alt="{{news.title}}">
++			  <div class="card-body">
++			    <h5 class="card-title">{{news.title}}</h5>
++			    <hr/>
++			    <p class="card-text">{{news.body}}</p>
++			  </div>
++			</div>
++			<a href="{% url 'edit_post' news.pk %}"> +Taxrirlash </a><br>
++			<a href="{% url 'delete_post' news.pk %}"> DELETE </a>
++
++		</div>
++		<div class="col-md-4">
++			<h3 class="mb-3 border-bottom pb-1">From this Category</h3>
++			<!-- Category Box -->
++            {% for news in rel_news %}
++			<div class="card mb-3 shadow">
++			    <img src="/media/{{news.image}}" class="card-img-top" alt="{{news.title}}">
++			  <div class="card-body">
++			    <h5 class="card-title">{{news.title}}</h5>
++			    <hr/>
++			    <p class="card-text"><a href="/detail/{{news.id}}" class="btn btn-sm btn-primary">Read Full</a></p>
++			  </div>
++			</div>
++		{% endfor %}
++		</div>
++	</div>
++
++</main>
++{% endblock%}
+\ No newline at end of file
+Index: templates/edit-post.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/edit-post.html b/templates/edit-post.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/edit-post.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,9 @@
++{% extends 'base.html'%}
++{% block content %}
++<h2>Postni tahrirlash</h2>
++<form method="post">
++  {%csrf_token%}
++  {{form.as_p}}
++  <input type="submit" value="Update">
++</form>
++{%endblock%}
+\ No newline at end of file
+Index: templates/home.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/home.html b/templates/home.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/home.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,49 @@
++{% extends 'base.html' %}
++{% block content%}
++<main class="container mt-3 mb-5">
++    <!-- featured news -->
++    <div class="row my-3">
++        <!-- Left -->
++        <div class="col-md-7">
++            <div class="card mb-3">
++                <img src="/media/{{first_news.image}}" class="card-img-top" alt="{{first_news.title}}">
++                <div class="card-body">
++                    <h5 class="card-title">{{first_news.title}}</h5>
++                    <hr/>
++                    <p class="card-text">
++                        <a href="/detail/{{first_news.id}}" class="btn btn-sm btn-primary">Read Full</a>
++                        <a href="{% url 'edit_post' first_news.pk %}" class="btn btn-sm btn-primary"> +Taxrirlash </a>
++                        <a href="{% url 'delete_post' first_news.pk %}" class="btn btn-sm btn-primary"> DELETE </a>
++                    </p>
++                </div>
++            </div>
++        </div>
++        <!-- Right -->
++        <div class="col-md-5" style="max-height: 450px; overflow: auto;">
++            {% for news in three_news %}
++            <!-- News Box -->
++            <div class="card">
++                <div class="row no-gutters">
++                    <div class="col-md-4">
++                        <img src="/media/{{news.image}}" class="card-img-top" alt="{{news.title}}">
++                    </div>
++                    <div class="col-md-8">
++                        <div class="card-body">
++                            <h5 class="card-title">{{news.title}}</h5>
++                            <p class="card-text">
++                                <a href="{% url 'detail' news.pk %}" class="btn btn-sm btn-primary">Read Full</a>
++                                <a href="{% url 'edit_post' news.pk %}" class="btn btn-sm btn-primary"> +Taxrirlash </a>
++                                <a href="{% url 'delete_post' news.pk %}" class="btn btn-sm btn-primary"> DELETE </a>
++                            </p>
++                        </div>
++                    </div>
++                </div>
++            </div>
++            <hr/>
++            {% endfor%}
++        </div>
++    </div>
++
++    <!-- End Single Category -->
++</main>
++{% endblock%}
+\ No newline at end of file
+Index: templates/region.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/region.html b/templates/region.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/region.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,23 @@
++{% extends 'base.html' %}
++{% block content%}
++<main class="container mt-3 mb-5">
++    <h3 class="border-bottom pb-1 my-4">All Regions</h3>
++    <div class="row">
++        <!-- Category Box -->
++        {% for reg in regs %}
++        <div class="col-md-4">
++            <div class="card mb-3 shadow">
++                <img src="/media/{{reg.image}}" class="card-img-top" alt="{{reg.title}}">
++                <div class="card-body">
++                    <h5 class="card-title">{{ reg.name}}</h5>
++                    <hr/>
++                    <p class="card-text">
++                        <a href="region/{{reg.id}}" class="btn btn-sm btn-primary">All News</a>
++                    </p>
++                </div>
++            </div>
++        </div>
++        {% endfor%}
++    </div>
++</main>
++{% endblock%}
+\ No newline at end of file
+Index: templates/region-news.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/region-news.html b/templates/region-news.html
+new file mode 100644
+--- /dev/null	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
++++ b/templates/region-news.html	(revision 23d153cfc6d89e481a2a754921a2fcfedb8c0dd5)
+@@ -0,0 +1,27 @@
++{% extends 'base.html' %}
++{% block content %}
++<main class="container mt-3 mb-5">
++    <h3 class="border-bottom pb-1 my-4">{{region.title}}</h3>
++    <!-- News Box -->
++    {% for news in all_regs %}
++    <div class="card mb-4 shadow">
++        <div class="row no-gutters">
++            <div class="col-md-3">
++                <img src="/media/{{news.image}}" class="card-img" alt="{{news.title}}">
++            </div>
++            <div class="col-md-8">
++                <div class="card-body">
++                    <h5 class="card-title">{{news.title}}</h5>
++                    <p class="card-text">{{news.detail}}</p>
++                    <p class="card-text">
++                        <a href="/detail/{{news.id}}" class="btn btn-sm btn-primary">Read Full</a>
++                        <a href="{% url 'edit_post' news.pk %}" class="btn btn-sm btn-primary"> +Taxrirlash </a>
++                        <a href="{% url 'delete_post' news.pk %}" class="btn btn-sm btn-primary"> DELETE </a>
++                    </p>
++                </div>
++            </div>
++        </div>
++    </div>
++    {% endfor %}
++</main>
++{% endblock%}
+\ No newline at end of file
